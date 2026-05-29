@@ -14,7 +14,7 @@ byte b_read (address adr); // - читаем байт по адресу adr и �
 void w_write (address adr, word val); // - пишем значение (слово) val по адресу adr;
 word w_read (address adr); // - читаем слово по адресу adr и возвращаем его;
 
-byte mem_b[MEMSIZE];
+//byte mem_b[MEMSIZE];
 word mem_w[MEMSIZE];
 
 int main() 
@@ -62,22 +62,33 @@ int main()
 // Запись слова val по адресу adr
 void w_write (address adr, word val)
 {
+    
     // проверка, что адрес слова четный
     assert((adr & 1) == 0);
-    mem_w[adr] = val;
+    byte last = (byte)(val & 0xFF);
+    byte first = (byte)(val >> 8);
+
+    mem_w[adr] = last;
+    mem_w[adr - 1] = first;
 }
 
 // Возвращает слово по адресу adr
 word w_read (address adr)
 {
-    return adr % 2 == 0 ? mem_w[adr] : (byte)(mem_w[adr - 1] >> 8);
+    word last = (word)(mem_w[adr + 1] << 8);
+    word first = mem_w[adr];
+    word result = first | last;
+
+
+    return result;
 }
 
 void b_write (address adr, byte val)
 {
-    mem_b[adr] = val;
+    mem_w[adr] = val;
 }
+
 byte b_read (address adr)
 {
-    return mem_b[adr];
+    return mem_w[adr];
 }
