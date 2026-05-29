@@ -1,14 +1,5 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <assert.h>
-#define MEMSIZE (1024 * 64)
+#include "mem.h"
 
-typedef unsigned char byte ; // 8 bit
-typedef unsigned short  word ;// 16 bit
-typedef word address ; // 64 Kb
-
-//byte mem_b[MEMSIZE];
 word mem_w[MEMSIZE];
 
 
