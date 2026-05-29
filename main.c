@@ -2,20 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <assert.h>
-#define MEMSIZE (1024 * 64)
-
-typedef unsigned char byte ; // 8 bit
-typedef unsigned short  word ;// 16 bit
-typedef word address ; // 64 Kb
-
-
-void b_write (address adr, byte val); // - пишем значение (байт) val по адресу adr;
-byte b_read (address adr); // - читаем байт по адресу adr и возвращаем его;
-void w_write (address adr, word val); // - пишем значение (слово) val по адресу adr;
-word w_read (address adr); // - читаем слово по адресу adr и возвращаем его;
-
-//byte mem_b[MEMSIZE];
-word mem_w[MEMSIZE];
+#include "mem.c"
 
 int main() 
 {
@@ -57,38 +44,4 @@ int main()
     printf("%c == %c ответ %s\n", (char)w2, (char)w_res, w2 == w_res ? "Правда" : "Лож");
 
     return 0;
-}
-
-// Запись слова val по адресу adr
-void w_write (address adr, word val)
-{
-    
-    // проверка, что адрес слова четный
-    assert((adr & 1) == 0);
-    byte last = (byte)(val & 0xFF);
-    byte first = (byte)(val >> 8);
-
-    mem_w[adr] = last;
-    mem_w[adr - 1] = first;
-}
-
-// Возвращает слово по адресу adr
-word w_read (address adr)
-{
-    word last = (word)(mem_w[adr + 1] << 8);
-    word first = mem_w[adr];
-    word result = first | last;
-
-
-    return result;
-}
-
-void b_write (address adr, byte val)
-{
-    mem_w[adr] = val;
-}
-
-byte b_read (address adr)
-{
-    return mem_w[adr];
 }
